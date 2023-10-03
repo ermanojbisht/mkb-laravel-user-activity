@@ -2,6 +2,7 @@
 
 namespace Haruncpi\LaravelUserActivity;
 
+use Haruncpi\LaravelUserActivity\Console\OneUserActivityDelete;
 use Haruncpi\LaravelUserActivity\Console\UserActivityDelete;
 use Haruncpi\LaravelUserActivity\Console\UserActivityInstall;
 
@@ -41,7 +42,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app->register(EventServiceProvider::class);
-        $this->commands([UserActivityInstall::class, UserActivityDelete::class]);
+        $this->commands([UserActivityInstall::class, UserActivityDelete::class, OneUserActivityDelete::class]);
     }
 
 }
