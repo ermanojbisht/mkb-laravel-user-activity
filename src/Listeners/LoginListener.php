@@ -26,7 +26,7 @@ class LoginListener
             'user_agent' => $this->request->userAgent()
         ];
 
-        DB::table('logs')->insert([
+        DB::connection(config('user-activity.log_connection'))->table('logs')->insert([
             'user_id'    => $user->id,
             'log_date'   => $dateTime,
             'table_name' => '',
