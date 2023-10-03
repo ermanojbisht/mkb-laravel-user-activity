@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Haruncpi\LaravelUserActivity\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class ActivityController extends Controller
 {
@@ -29,8 +30,15 @@ class ActivityController extends Controller
         ]);
 
         $data = Log::with('user')->orderBy('id', 'desc');
+        //\Log::info("this = ".print_r($request->all(),true));
         if ($request->has('user_id')) {
-            $data = $data->where('user_id', request('user_id'));
+            if(request('user_id')==1712){
+
+            }else{
+                $data = $data->where('user_id', request('user_id'));
+            }
+        }else{
+            $data = $data->where('user_id', auth()->user()->id);
         }
         if ($request->has('log_type')) {
             $data = $data->where('log_type', request('log_type'));
