@@ -2,32 +2,24 @@
 
 namespace Haruncpi\LaravelUserActivity\Listeners;
 
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class LockoutListener
+class LogoutListener
 {
-
-    private $userInstance = "\App\Models\User";
-
     public function __construct(Request $request)
     {
         $this->request = $request;
-
-        $userInstance = config('user-activity.model.user');
-        if(!empty($userInstance)) $this->userInstance = $userInstance;
     }
 
-
-    public function handle($event)
+    public function handle(Logout $event)
     {
-        if (!config('user-activity.log_events.on_lockout', false)
+        if (!config('user-activity.log_events.on_login', false)
             || !config('user-activity.activated', true)) return;
 
-        if (!$event->request->has('email')) return;
-        $user = $this->userInstance::where('email', $event->request->input('email'))->first();
-        if (!$user) return;
-
+        $user = $event->user;
+        $dateTime = date('Y-m-d H:i:s');
 
         $data = [
             'ip'         => $this->request->ip(),
@@ -36,11 +28,10 @@ class LockoutListener
 
         DB::connection(config('user-activity.log_connection'))->table('logs')->insert([
             'user_id'    => $user->id,
-            'log_date'   => date('Y-m-d H:i:s'),
+            'log_date'   => $dateTime,
             'table_name' => '',
-            'log_type'   => 'lockout',
+            'log_type'   => 'logout',
             'data'       => json_encode($data)
         ]);
-
     }
 }

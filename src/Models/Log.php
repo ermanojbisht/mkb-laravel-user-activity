@@ -7,10 +7,12 @@ class Log extends Model
 {
     public $timestamps = false;
     protected $appends = ['dateHumanize','json_data'];
+    protected $connection ;
 
     private $userInstance = "\App\Models\User";
 
     public function __construct() {
+        $this->connection=config('user-activity.log_connection');
         $userInstance = config('user-activity.model.user');
         if(!empty($userInstance)) $this->userInstance = $userInstance;
     }
